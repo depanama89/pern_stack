@@ -2,6 +2,11 @@ import { RequestHandler } from "express";
 import createHttpError from "http-errors";
 import { pool } from "../db/db";
 import bcrypt from "bcrypt";
+import {
+  comparePassword,
+  createJWT,
+  hashPassword,
+} from "../middlewares/passwordhash";
 
 export const getAllUsers: RequestHandler = async (req, res, next) => {
   res.send("hello,wordl");
@@ -9,8 +14,8 @@ export const getAllUsers: RequestHandler = async (req, res, next) => {
 
 interface SignUpUserProps {
   email: string;
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   contact: string;
   accounts: string;
   password: string;
@@ -28,8 +33,8 @@ export const signUpUser: RequestHandler<
 > = async (req, res, next) => {
   const {
     email,
-    firstname,
-    lastname,
+    firstName,
+    lastName,
     contact,
     accounts,
     password,
@@ -40,9 +45,9 @@ export const signUpUser: RequestHandler<
   try {
     if (
       !(
-        firstname ||
+        firstName ||
         email ||
-        lastname ||
+        lastName ||
         contact ||
         accounts ||
         password ||
@@ -63,17 +68,18 @@ export const signUpUser: RequestHandler<
       throw next(createHttpError(400, "c'est utilisateur existe deja !"));
     }
 
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    // const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const hashedPassword = await hashPassword({ password });
 
     const newUser = await pool.query(
       `INSERT INTO tbluser (
-        email, firstname, lastname, contact, 
+        email, firstName, lastName, contact, 
         accounts, password, provider, country, currency
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id, email, firstname, lastname, contact, accounts, provider, country, currency`,
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id, email, firstName, lastName, contact, accounts, provider, country, currency`,
       [
         email,
-        firstname,
-        lastname,
+        firstName,
+        lastName,
         contact,
         accounts,
         hashedPassword,
@@ -84,7 +90,7 @@ export const signUpUser: RequestHandler<
     );
 
     // const {password:- ,...userWithoutPassword}=newUser.rows[0]
-
+    //   newUser.rows[0].password=undefined
     res.status(201).json(newUser.rows[0]);
   } catch (error) {
     next(error);
@@ -92,8 +98,8 @@ export const signUpUser: RequestHandler<
 };
 
 interface LogInUserProps {
-  email: string;
-  password: string;
+  email?: string;
+  password?: string;
 }
 
 export const logInUser: RequestHandler<
@@ -101,4 +107,53 @@ export const logInUser: RequestHandler<
   unknown,
   LogInUserProps,
   unknown
-> = async (req, res, next) => {};
+> = async (req, res, next) => {
+  const { email, password } = req.body;
+
+  try {
+    if (!email || !password) {
+      throw createHttpError(400, "Email and password are required");
+    }
+
+    const result = await pool.query({
+      text: `SELECT*FROM tbluser WHERE email=$1`,
+      values: [email],
+    });
+
+    const user = result.rows[0];
+console.log(user);
+
+    if (!user) {
+      throw createHttpError(401, "Invalid email and password");
+    }
+
+    // Comparaison des mots de passe (avec logs pour débogage)
+    console.log("Comparaison entre:", {
+        inputPassword: password,
+        storedHash: user.password
+      });
+
+    const isMatch = await comparePassword({
+      userPassword: user?.password,
+      password,
+    });
+
+    if (!isMatch) {
+
+      throw createHttpError(401, "mot de passe ne correspond");
+    }
+
+    const token = createJWT(user.id);
+    //   pour n'est pas retourné le mot de passe
+
+    user.password = undefined;
+
+    res.status(200).json({
+      message: "Login successFully",
+      user,
+      token,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
