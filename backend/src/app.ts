@@ -7,6 +7,7 @@ import accountsRouter from "./routers/accounts"
 import transactionsRouter from "./routers/transactions"
 import createHttpError,{isHttpError} from "http-errors";
 import { error } from "console";
+import authMiddleware from "./middlewares/authMiddleware";
 
 const app = express();
 
@@ -17,7 +18,8 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 
-app.use("/api-v1/users",userRouter)
+app.use("/api-v1/auth",userRouter)
+app.use("/api-v1/users",authMiddleware,userRouter)
 app.use("/api-v1/transactions",transactionsRouter)
 app.use("/api-v1/accounts",accountsRouter)
 app.get("/",(req,res)=>{

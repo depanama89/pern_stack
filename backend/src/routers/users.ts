@@ -6,7 +6,7 @@ const router=express.Router()
 
 
 router.get("/",UserControllers.getAllUsers)
-router.post("/sign-up",UserControllers.signUpUser)
-router.post("/log-in",UserControllers.logInUser)
+router.get("/:id",UserControllers.getAllUserId)
+router.patch("/:id",UserControllers.update)
 
 export default router
