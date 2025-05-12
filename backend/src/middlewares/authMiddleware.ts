@@ -1,33 +1,52 @@
-import { NextFunction,Response, Request ,RequestHandler } from 'express'
-import JWT from 'jsonwebtoken'
-import env from "../util/validateEnv"
+import { NextFunction, Response, Request, RequestHandler } from "express";
+import JWT from "jsonwebtoken";
+import env from "../util/validateEnv";
 
- const  authMiddleware:RequestHandler =async (req,res,next)=>{
-
-    const authHeader=req.headers.authorization
-
-
-    if(!authHeader || !authHeader.startsWith("Bearer")){
-         res.status(401).json({
-            status:"auth_failed",message:"Authentication failed"
-        })
-        return
+// Extension du type Request d'Express
+declare global {
+  namespace Express {
+    interface Request {
+      user?: {
+        userId: string;
+      };
     }
-    const token =authHeader.split(" ")[1]
-
-    try {
-        const userToken = JWT.verify(token,env.JWT_SECRET)
-
-        req.body.user={
-            userId:userToken
-        }
-
-        next()
-        
-    } catch (error) {
-      console.log(error);
-      res.status(401).json({ status:"auth_failed",message:"Authentication failde"})
-        
-    }
+  }
 }
-export default  authMiddleware
+
+
+const authMiddleware: RequestHandler = async (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer")) {
+      res.status(401).json({
+        status: "auth_failed",
+        message: "Authentication failed",
+      });
+      return;
+    }
+    const token = authHeader.split(" ")[1];
+
+
+    const userToken = JWT.verify(token, env.JWT_SECRET) as { userId: string };
+    // console.log(userToken);
+    
+    if (!userToken.userId) {
+        console.log('Token malformé',userToken);
+        
+      throw new Error("Token malformé: userId manquant");
+    }
+    req.user = {
+      userId: userToken.userId,
+    };
+
+
+    next();
+  } catch (error) {
+    console.log(error);
+    res
+      .status(401)
+      .json({ status: "auth_failed", message: "Token JWT invalide" });
+  }
+};
+export default authMiddleware;

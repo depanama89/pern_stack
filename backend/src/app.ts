@@ -3,6 +3,7 @@ import express, { NextFunction, Request, Response } from "express";
 import cors from 'cors'
 import morgan from "morgan"
 import userRouter from "./routers/users"
+import authRouter from "./routers/authRoute"
 import accountsRouter from "./routers/accounts"
 import transactionsRouter from "./routers/transactions"
 import createHttpError,{isHttpError} from "http-errors";
@@ -18,10 +19,10 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 
-app.use("/api-v1/auth",userRouter)
+app.use("/api-v1/auth",authRouter)
 app.use("/api-v1/users",authMiddleware,userRouter)
 app.use("/api-v1/transactions",transactionsRouter)
-app.use("/api-v1/accounts",accountsRouter)
+app.use("/api-v1/accounts",authMiddleware,accountsRouter)
 app.get("/",(req,res)=>{
    res.send("Hello,world")
 

@@ -135,7 +135,7 @@ console.log(user);
 
     const isMatch = await comparePassword({
       userPassword: user?.password,
-      password,
+      password:password,
     });
 
     if (!isMatch) {
@@ -143,7 +143,7 @@ console.log(user);
       throw createHttpError(401, "mot de passe ne correspond");
     }
 
-    const token = createJWT(user.id);
+    const token = createJWT({id:user.id});
     //   pour n'est pas retourné le mot de passe
 
     user.password = undefined;
@@ -154,6 +154,8 @@ console.log(user);
       token,
     });
   } catch (error) {
+    console.log(error);
+    
     next(error);
   }
 };

@@ -5,18 +5,35 @@ import JWT from "jsonwebtoken";
 import env from "../util/validateEnv"
 
 interface HashpasswordProps {
-  password: string;
+  password?: string;
 
 }
 
-export const hashPassword = async ({ password }: HashpasswordProps):Promise<string> => {
-  const salt = await bcrypt.genSalt(10);
+export const hashPassword=async({password}:HashpasswordProps)=>{
+  if (password === undefined || password === null) {
+    throw new Error('Le paramètre password est requis');
+  }
+  // const salt = await bcrypt.hash(password,10)
+   // 2. Hachage sécurisé
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    // Vérification du résultat
+    if (!hashedPassword) {
+      throw new Error('Erreur lors de la génération du hash');
+    }
 
-  const hashedPassword = await bcrypt.hash(password, salt);
+    return hashedPassword;
+  } catch (error) {
+    console.error('Erreur de hachage:', {
+      error,
+      inputType: typeof password,
+      inputLength: password?.length
+    });
+    throw new Error('Échec du cryptage du mot de passe');
+  }
 
-  return hashedPassword;
-};
-
+}
 
 interface comparePasswordProps{
   userPassword: string,
@@ -32,10 +49,11 @@ export const comparePassword = async (
   } catch (error) {
     console.log(error);
     
+    
   }
 };
 interface createJWTProps{
-  id:number
+  id:string
 }
 export const createJWT=({id}: createJWTProps)=>{
   return JWT.sign({
