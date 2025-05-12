@@ -5,6 +5,6 @@ const router=express.Router()
 
 router.get("/",accountsController.getAllAccounts)
 router.post("/create",accountsController.createAccounts)
-router.patch("/add-money/:id",accountsController.addMoneyUsers)
+router.patch("/add-money/:id",accountsController.addMoneyToAccount)
 
 export default router

@@ -18,7 +18,7 @@ export const getAllAccounts: RequestHandler = async (req, res, next) => {
   } catch (error) {
     console.log(error);
 
-    next(createHttpError(500, "impossiblee d'afficher les comptes"));
+    // next(createHttpError(500, "impossiblee d'afficher les comptes"));
   }
 };
 
