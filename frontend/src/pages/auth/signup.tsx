@@ -1,3 +1,8 @@
+import {
+  GithubAuthProvider,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useStore from "../../store";
@@ -12,6 +17,7 @@ import {
   CardTitle,
 } from "../../components/ui/card";
 import type { User } from "../../model/user";
+import SocialAuth from "../../components/socialAuth";
 
 interface SignProps {
   onSignUpSuccessFul: (user: User) => void;
@@ -49,10 +55,12 @@ const SignUp = ({ onSignUpSuccessFul }: SignProps) => {
           </CardHeader>
           <CardContent className="p-0">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <input {...register("email", { required: true })} />
+              {/* <input {...register("email", { required: true })} />
               <input {...register("firstName", { required: true })} />
               <input {...register("lastName", { required: true })} />
-              <input {...register("accounts", { required: true })} />
+              <input {...register("accounts", { required: true })} /> */}
+
+              <SocialAuth isloading={loading} setLoading={setLoading} />
             </form>
           </CardContent>
         </div>
