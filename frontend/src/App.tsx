@@ -1,4 +1,4 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import SignIn from "./pages/auth/signIn";
 import SignUp from "./pages/auth/signup";
@@ -11,12 +11,12 @@ import useStore from "./store";
 // import Test  from "./pages/test"
 
 const ProtectedRoot = () => {
-  const {user }= useStore((state)=>state);
+  const { user } = useStore((state) => state);
 
   console.log(user);
-  
+
   return !user ? (
-    <Navigate to="signin"  replace={true}/>
+    <Navigate to="signin" replace={true} />
   ) : (
     <>
       <div className="min-h-[cal(h-screen-100px)]">
@@ -27,12 +27,14 @@ const ProtectedRoot = () => {
 };
 
 function App() {
-  
-
   return (
     <main>
       <div className="w-full min-h-screen px-6 bg-gray-100 md:px-20 dark:bg-slate-900">
         <Routes>
+          <Route path="/signin" element={<SignIn />} />
+          {/* <Route path="/test" element={<Test />} /> */}
+          <Route path="/signup" element={<SignUp />} />
+
           <Route element={<ProtectedRoot />}>
             <Route path="/" element={<Navigate to="/overview" />} />
             <Route path="/overview" element={<Dashbaord />} />
@@ -41,9 +43,6 @@ function App() {
             <Route path="/account" element={<AccountPage />} />
             <Route />
           </Route>
-          <Route path="/signin" element={<SignIn />} />
-          {/* <Route path="/test" element={<Test />} /> */}
-          <Route path="/signup" element={<SignUp />} />
         </Routes>
       </div>
     </main>

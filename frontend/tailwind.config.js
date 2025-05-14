@@ -1,7 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
-  darkMode: "class",
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}", // Adjust based on your file structure
+  ],
   theme: {
     extend: {
       colors: {
@@ -39,7 +41,7 @@ export default {
           foreground: "hsl(var(--card-foreground))",
         },
       },
-    },
+    }, // Add customizations here
   },
-  plugins: [],
+  plugins: [], // Add Tailwind plugins if needed
 };

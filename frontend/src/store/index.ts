@@ -7,7 +7,7 @@ import type { StoreState } from "../utilities/types";
 // decrement:()=>set((state)=>({count :state.count - 1}))
 //  }))
 
-const userData = localStorage.getItem("user");
+const userData = localStorage.getItem("userstack");
 
 const useStore = create<StoreState>((set) => ({
   theme: localStorage.getItem("theme") ?? "light",
