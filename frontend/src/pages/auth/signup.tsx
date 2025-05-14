@@ -60,7 +60,9 @@ const SignUp = ({ onSignUpSuccessFul }: SignProps) => {
               <input {...register("lastName", { required: true })} />
               <input {...register("accounts", { required: true })} /> */}
 
-              <SocialAuth isloading={loading} setLoading={setLoading} />
+              <div className="mb-8 space-y-6">
+                <SocialAuth isloading={loading} setLoading={setLoading} />
+              </div>
             </form>
           </CardContent>
         </div>
