@@ -7,7 +7,7 @@ export const getAllAccounts: RequestHandler = async (req, res, next) => {
     const { userId } = req.user!;
 
     const accounts = await pool.query({
-      text: `SELECT * FROM tblaccount user_id=$1`,
+      text: `SELECT * FROM tblaccount WHERE  user_id=$1`,
       values: [userId],
     });
 
@@ -18,7 +18,7 @@ export const getAllAccounts: RequestHandler = async (req, res, next) => {
   } catch (error) {
     console.log(error);
 
-    // next(createHttpError(500, "impossiblee d'afficher les comptes"));
+    next(createHttpError(500, "impossiblee d'afficher les comptes"));
   }
 };
 

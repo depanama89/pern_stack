@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use("/api-v1/auth",authRouter)
 app.use("/api-v1/users",authMiddleware,userRouter)
-app.use("/api-v1/transactions",transactionsRouter)
+app.use("/api-v1/transactions",authMiddleware,transactionsRouter)
 app.use("/api-v1/accounts",authMiddleware,accountsRouter)
 app.get("/",(req,res)=>{
    res.send("Hello,world")
