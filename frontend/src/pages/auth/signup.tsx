@@ -4,7 +4,7 @@ import useStore from "../../store";
 import { RegisterSchema } from "../../utilities/validateData";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Card, CardHeader, CardTitle } from "../../components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 const SignUp = () => {
   const { user } = useStore((state) => state);
   const {
@@ -22,7 +22,7 @@ const SignUp = () => {
     user && navigate("/");
   }, [user]);
 
-  const onSubmit = async (data: string) => {
+  const onSubmit = async (data: string):Promise<string> => {
     console.log(data);
   };
   return (
@@ -32,6 +32,11 @@ const SignUp = () => {
           <CardHeader className="py-0">
             <CardTitle className="mb-8 text-center dark:text-white">Create an Account</CardTitle>
           </CardHeader>
+          <CardContent className="p-0">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+
+            </form>
+          </CardContent>
         </div>
       </Card>
     </div>
