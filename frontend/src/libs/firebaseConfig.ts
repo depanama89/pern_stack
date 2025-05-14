@@ -8,15 +8,7 @@ import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDqtQiff8_SHfZbyAexgHxBx9ucfWuy9g4",
-  authDomain: "pernstack-ee708.firebaseapp.com",
-  projectId: "pernstack-ee708",
-  storageBucket: "pernstack-ee708.firebasestorage.app",
-  messagingSenderId: "1021800730520",
-  appId: "1:1021800730520:web:ac7db32eda5bb2f29065ed",
-  measurementId: "G-J5PN5HJRYE",
-};
+const firebaseConfig = {};
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
