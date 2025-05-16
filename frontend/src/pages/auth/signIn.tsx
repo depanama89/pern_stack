@@ -20,7 +20,7 @@ interface signInProps {
 }
 const SignIn = ({ onLoginSuccessFull }: signInProps) => {
   const [loading, setLoading] = useState(false);
-  const { user, setCredentails } = useStore();
+  const { user, setCredentails } = useStore((state) => state);
 
   const navigate = useNavigate();
   const {
@@ -39,12 +39,12 @@ const SignIn = ({ onLoginSuccessFull }: signInProps) => {
     setLoading(true);
 
     try {
-      const login = await pernApi.signIn(input);
+      const login = await pernApi.signIn(input) ;
 
       if (login) {
         toast.success("Login successful!");
       }
-      setCredentails(login);
+      setCredentails(login.user);
       onLoginSuccessFull(login);
       setTimeout(() => {
         navigate("/");
