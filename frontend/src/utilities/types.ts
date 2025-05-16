@@ -1,3 +1,5 @@
+import type { User } from "../model/user";
+
 export interface StoreState {
   theme: string;
   user: User | null;
@@ -6,8 +8,8 @@ export interface StoreState {
   signOut: () => void;
 }
 
-interface User {
-  id: number;
-  firstname: string;
-  email: string;
-}
+// interface User {
+//   id: number;
+//   firstname: string;
+//   email: string;
+// }

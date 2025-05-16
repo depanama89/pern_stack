@@ -12,7 +12,7 @@ export const Card: React.FC<CardProps> = ({
 }) => (
   <div
     className={clsx(
-      "rounded-lg border border-background bg-card text-card-foreground shadow-sm",
+      "rounded-lg border border-amber-50 border-background bg-card text-card-foreground shadow-sm",
       className
     )}
     {...props}
