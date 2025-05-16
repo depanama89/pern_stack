@@ -23,7 +23,7 @@ const ProtectedRoot = () => {
     <Navigate to="signin" replace={true} />
   ) : (
     <>
-    <Navbar/>
+      <Navbar />
       <div className="min-h-[cal(h-screen-100px)]">
         <Outlet />
       </div>
@@ -33,8 +33,9 @@ const ProtectedRoot = () => {
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState<User | null>();
+  // const theme = useStore((state) => state.theme);
   return (
-    <main>
+    <main className="">
       <div className="w-full min-h-screen px-6 bg-gray-100 md:px-20 dark:bg-slate-900">
         <Routes>
           <Route
