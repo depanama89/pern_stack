@@ -9,14 +9,17 @@ import {
 import type { LoginCredentiels } from "../../network/pern_api";
 import * as pernApi from "../../network/pern_api";
 import type { User } from "../../model/user";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useStore from "../../store";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { BiLoader } from "react-icons/bi";
 
 interface signInProps {
   onLoginSuccessFull: (user: User) => void;
 }
 const SignIn = ({ onLoginSuccessFull }: signInProps) => {
+  const [loading, setLoading] = useState(false);
   const { user, setCredentails } = useStore();
 
   const navigate = useNavigate();
@@ -33,14 +36,24 @@ const SignIn = ({ onLoginSuccessFull }: signInProps) => {
   }, [user]);
 
   const onSubmit = async (input: LoginCredentiels) => {
-    console.log(input);
+    setLoading(true);
+
     try {
       const login = await pernApi.signIn(input);
+
+      if (login) {
+        toast.success("Login successful!");
+      }
       setCredentails(login);
       onLoginSuccessFull(login);
-      navigate("/");
+      setTimeout(() => {
+        navigate("/");
+      }, 5000);
     } catch (error) {
       console.log(error);
+      toast.error("Login failed. Please check your credentials.");
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -80,7 +93,9 @@ const SignIn = ({ onLoginSuccessFull }: signInProps) => {
                 </label>
                 <div>
                   <input
-                    {...register("password", { required:"password is required" })}
+                    {...register("password", {
+                      required: "password is required",
+                    })}
                     className={`border border-gray-100 rounded outline-none px-2 py-3 w-full ${
                       errors.password ? "border-red-600" : ""
                     }`}
@@ -100,10 +115,14 @@ const SignIn = ({ onLoginSuccessFull }: signInProps) => {
               </div>
               <button
                 type="submit"
-                disabled={isSubmitted}
-                className="w-full bg-blue-700 text-amber-50 rounded-full px-3 py-3 cursor-pointer hover:bg-blue-600 hover:text-blue-50"
+                disabled={loading}
+                className="w-full bg-blue-700 text-amber-50 rounded-full px-3 py-3 flex justify-center cursor-pointer hover:bg-blue-600 hover:text-blue-50"
               >
-                Se connecter
+                {loading ? (
+                  <BiLoader className="text-2xl text-white animate-spin" />
+                ) : (
+                  " Se connecter"
+                )}
               </button>
             </form>
           </CardContent>

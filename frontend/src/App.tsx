@@ -10,8 +10,9 @@ import Transactions from "./pages/transactions";
 import useStore from "./store";
 import type { User } from "./model/user";
 import { useState } from "react";
+import { Toaster } from "sonner";
+import Navbar from "./components/navbar/Navbar";
 // import Test  from "./pages/test"
-
 
 const ProtectedRoot = () => {
   const { user } = useStore((state) => state);
@@ -22,6 +23,7 @@ const ProtectedRoot = () => {
     <Navigate to="signin" replace={true} />
   ) : (
     <>
+    <Navbar/>
       <div className="min-h-[cal(h-screen-100px)]">
         <Outlet />
       </div>
@@ -30,26 +32,48 @@ const ProtectedRoot = () => {
 };
 
 function App() {
-
-  const [loggedInUser,setLoggedInUser]=useState<User | null>()
+  const [loggedInUser, setLoggedInUser] = useState<User | null>();
   return (
     <main>
       <div className="w-full min-h-screen px-6 bg-gray-100 md:px-20 dark:bg-slate-900">
         <Routes>
-          <Route path="/signin" element={<SignIn onLoginSuccessFull={(user)=>setLoggedInUser(user)} />} />
+          <Route
+            path="/signin"
+            element={
+              <SignIn onLoginSuccessFull={(user) => setLoggedInUser(user)} />
+            }
+          />
           {/* <Route path="/test" element={<Test />} /> */}
-          <Route path="/signup" element={<SignUp  onSignUpSuccessFul={(user)=>setLoggedInUser(user)}/>} />
+          <Route
+            path="/signup"
+            element={
+              <SignUp onSignUpSuccessFul={(user) => setLoggedInUser(user)} />
+            }
+          />
 
           <Route element={<ProtectedRoot />}>
             <Route path="/" element={<Navigate to="/overview" />} />
             <Route path="/overview" element={<Dashbaord />} />
             <Route path="/transactions" element={<Transactions />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="/account" element={<AccountPage />} />
+            <Route path="/accounts" element={<AccountPage />} />
             <Route />
           </Route>
         </Routes>
       </div>
+      <Toaster
+        className="toaster-group"
+        position="top-center"
+        richColors
+        toastOptions={{
+          classNames: {
+            toast: "bg-neutral-800 text-white border-0", // Style global
+            success: "bg-green-600", // Style pour les succès
+            error: "bg-red-600", // Style pour les erreurs
+          },
+        }}
+        duration={4000}
+      />
     </main>
   );
 }

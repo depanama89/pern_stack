@@ -20,6 +20,8 @@ import {
 import type { User } from "../../model/user";
 import * as pernApi from "../../network/pern_api";
 import SocialAuth from "../../components/socialAuth";
+import { toast } from "sonner";
+import { BiLoader } from "react-icons/bi";
 
 // type methode de payement
 
@@ -32,27 +34,15 @@ const SignUp = ({ onSignUpSuccessFul }: SignProps) => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors, isSubmitted },
-    setValue,
   } = useForm<SignUpCredentials>({
     defaultValues: {
       accounts: [],
     },
   });
 
-  // const handleCheckboxChange = (method: PayementMethod) => {
-  //   setAccount((prev) =>
-  //     prev.includes(method)
-  //       ? prev.filter((m) => m !== method)
-  //       : [...prev, method]
-  //   );
-  // };
-  // {
-  //     resolver: zodResolver(RegisterSchema),
-  //   }
   const navigate = useNavigate();
-  const [loading, setLoading] = useState();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -62,9 +52,22 @@ const SignUp = ({ onSignUpSuccessFul }: SignProps) => {
 
   const onSubmit = async (input: SignUpCredentials) => {
     // console.log(input);
-    const newUser = await pernApi.signUp(input);
-    navigate("/signin");
-    onSignUpSuccessFul(newUser);
+    setLoading(true);
+    try {
+      const newUser = await pernApi.signUp(input);
+
+      if (newUser) {
+        toast.success("Enregistrement effectuer avec success!");
+        navigate("/signin");
+      onSignUpSuccessFul(newUser);
+      }
+
+      
+    } catch (error) {
+      toast.error("Enregistrement échoué");
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <div className="flex items-center justify-center w-full min-h-screen py-10">
@@ -226,10 +229,14 @@ const SignUp = ({ onSignUpSuccessFul }: SignProps) => {
               </div>
               <button
                 type="submit"
-                disabled={isSubmitted}
-                className="w-full bg-blue-700 text-amber-50 rounded-full px-3 py-3 cursor-pointer hover:bg-blue-600 hover:text-blue-50"
+                disabled={loading}
+                className="w-full bg-blue-700 text-amber-50 rounded-full px-3 py-3 flex justify-center cursor-pointer hover:bg-blue-600 hover:text-blue-50"
               >
-                Sauvegarder
+                {loading ? (
+                  <BiLoader className="text-2xl text-white animate-spin" />
+                ) : (
+                  " Sauvegarder"
+                )}
               </button>
             </form>
           </CardContent>

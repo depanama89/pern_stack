@@ -55,6 +55,9 @@ export const comparePassword = async (
 interface createJWTProps{
   id:string
 }
+
+
+
 export const createJWT=({id}: createJWTProps)=>{
   return JWT.sign({
     userId:id

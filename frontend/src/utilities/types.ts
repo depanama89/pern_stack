@@ -4,7 +4,7 @@ export interface StoreState {
   theme: string;
   user: User | null;
   setTheme: (value: string) => void;
-  setCredentails: (user: User) => void;
+  setCredentails: (user: User | null) => void;
   signOut: () => void;
 }
 

@@ -7,6 +7,7 @@ import {
   createJWT,
   hashPassword,
 } from "../middlewares/passwordhash";
+import env from "../util/validateEnv"
 
 // export const getAllUsers: RequestHandler = async (req, res, next) => {
 //   res.send("hello,wordl");
@@ -121,17 +122,17 @@ export const logInUser: RequestHandler<
     });
 
     const user = result.rows[0];
-console.log(user);
+// console.log(user);
 
     if (!user) {
       throw createHttpError(401, "Invalid email and password");
     }
 
     // Comparaison des mots de passe (avec logs pour débogage)
-    console.log("Comparaison entre:", {
-        inputPassword: password,
-        storedHash: user.password
-      });
+    // console.log("Comparaison entre:", {
+    //     inputPassword: password,
+    //     storedHash: user.password
+    //   });
 
     const isMatch = await comparePassword({
       userPassword: user?.password,
@@ -144,6 +145,13 @@ console.log(user);
     }
 
     const token = createJWT({id:user.id});
+
+    res.cookie('token',token,{
+      httpOnly:true,
+      secure:env.NODE_ENV==='production',
+      sameSite:'strict',
+      maxAge:86400*1000
+    })
     //   pour n'est pas retourné le mot de passe
 
     user.password = undefined;
