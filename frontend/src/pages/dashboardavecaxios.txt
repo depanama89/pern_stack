@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import Loading from "../components/loading";
 import * as pernApi from "../network/pern_api";
-import type { DashboardData } from "../network/pern_api";
-
+import type { Transaction as TransactionModel } from "../model/transaction";
 import { useNavigate } from "react-router-dom";
 import useStore from "../store";
 import Info from "../components/info";
@@ -10,13 +9,22 @@ import Stats from "../components/stats";
 import Chart from "../components/Chart";
 import DoughnutChart from "../components/DoughnutChart";
 import Transaction from "../components/Transaction";
+import api from "../network/api";
 import { toast } from "sonner";
 
+type DashboardData = {
+  status: string;
+  availableBalance: number;
+  totalIncome: number;
+  totalExpense: number;
+  chartData: any[]; // Tu peux affiner ce type selon la structure exacte
+  lastTransactions: any[]; // À remplacer si tu as un modèle `TransactionModel`
+  lastAccount: any[]; // À remplacer si tu as un modèle `AccountModel`
+};
 const Dashbaord = () => {
   const [isloading, setIsLoading] = useState(true);
-
   const [fetchData, setFetchData] = useState<DashboardData | null>(null);
-
+  // const [data, setData] = useState<TransactionModel[]>([]);
   const navigate = useNavigate();
 
   const { user } = useStore((state) => state);
@@ -35,23 +43,15 @@ const Dashbaord = () => {
   useEffect(() => {
     // setIsLoading(true);
     const fetchDashboardStats = async () => {
-      // const URL = `/transactions/dashboard`;
+      const URL = `/transactions/dashboard`;
       try {
-        const data = await pernApi.fetchStat();
-
-        // if (!Array.isArray(data)) {
-        //   // console.log(error);
-
-        //   throw new Error("L'API devrait retourner un tableau");
-        // }
+        const { data } = await api.get(URL, {
+          withCredentials: true,
+        });
         setFetchData(data);
       } catch (error) {
-        // console.error(error);
-        // console.log(error);
-        toast.error("Erreur API",{
-        description: error instanceof Error ? error.message : "Une erreur inconnue est survenue.",
-        })
-         
+        console.error(error);
+        toast.error("Erreur lors du chargement du tableau de bord");
       } finally {
         setIsLoading(false);
       }
@@ -62,7 +62,30 @@ const Dashbaord = () => {
   }, [user]);
   console.log(fetchData);
 
- 
+  // useEffect(() => {
+
+  //   const fetchTransactionStatistique = async () => {
+  //     try {
+  //       setIsLoading(true);
+  //       const data = await pernApi.fetchStat();
+  //       // console.log(data);
+
+  //       // Normalisation de la réponse
+  //       const normalizedData = Array.isArray(data) ? data : [data];
+  //       setData(normalizedData);
+  //       console.log(data);
+
+  //       // setData(data);
+  //     } catch (error) {
+  //       console.log(error);
+
+  //       console.error(error);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+  //   fetchTransactionStatistique();
+  // }, []);
 
   if (isloading) {
     return (
@@ -82,13 +105,6 @@ const Dashbaord = () => {
             expense: fetchData.totalExpense,
           }}
         />
-        // <Stats
-        //   dt={{
-        //     balance: fetchData.availableBalance,
-        //     income: fetchData.totalIncome,
-        //     expense: fetchData.totalExpense,
-        //   }}
-        // />
       )}
       <div className="w-full flex flex-col gap-10 items-center md:flex md:flex-row  md:items-center lg:flex  ">
         <Chart />

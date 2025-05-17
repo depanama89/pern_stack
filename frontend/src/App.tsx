@@ -8,8 +8,8 @@ import AccountPage from "./pages/accountPage";
 import Settings from "./pages/settings";
 import Transactions from "./pages/transactions";
 import useStore from "./store";
-import type { User } from "./model/user";
-import { useState } from "react";
+// import type { User } from "./model/user";
+// import { useState } from "react";
 import { Toaster } from "sonner";
 import Navbar from "./components/navbar/Navbar";
 // import Test  from "./pages/test"
@@ -32,7 +32,7 @@ const ProtectedRoot = () => {
 };
 
 function App() {
-  const [loggedInUser, setLoggedInUser] = useState<User | null>();
+  // const [loggedInUser, setLoggedInUser] = useState<User | null>();
   const theme = useStore((state) => state.theme);
   console.log(theme);
   
@@ -43,14 +43,14 @@ function App() {
           <Route
             path="/signin"
             element={
-              <SignIn onLoginSuccessFull={(user) => setLoggedInUser(user)} />
+              <SignIn />
             }
           />
           {/* <Route path="/test" element={<Test />} /> */}
           <Route
             path="/signup"
             element={
-              <SignUp onSignUpSuccessFul={(user) => setLoggedInUser(user)} />
+              <SignUp  />
             }
           />
 

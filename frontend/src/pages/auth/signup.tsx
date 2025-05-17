@@ -1,10 +1,10 @@
-import {
-  GithubAuthProvider,
-  GoogleAuthProvider,
-  signInWithPopup,
-} from "firebase/auth";
+// import {
+//   GithubAuthProvider,
+//   GoogleAuthProvider,
+//   signInWithPopup,
+// } from "firebase/auth";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+// import { zodResolver } from "@hookform/resolvers/zod";
 import useStore from "../../store";
 import type { SignUpCredentials } from "../../network/pern_api";
 // import { RegisterSchema } from "../../utilities/validateData";
@@ -17,24 +17,22 @@ import {
   CardHeader,
   CardTitle,
 } from "../../components/ui/card";
-import type { User } from "../../model/user";
+// import type { User } from "../../model/user";
 import * as pernApi from "../../network/pern_api";
-import SocialAuth from "../../components/socialAuth";
+// import SocialAuth from "../../components/socialAuth";
 import { toast } from "sonner";
 import { BiLoader } from "react-icons/bi";
 
 // type methode de payement
 
-interface SignProps {
-  onSignUpSuccessFul: (user: User) => void;
-}
 
-const SignUp = ({ onSignUpSuccessFul }: SignProps) => {
+
+const SignUp = () => {
   const { user } = useStore((state) => state);
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitted },
+    formState: { errors},
   } = useForm<SignUpCredentials>({
     defaultValues: {
       accounts: [],
@@ -59,7 +57,7 @@ const SignUp = ({ onSignUpSuccessFul }: SignProps) => {
       if (newUser) {
         toast.success("Enregistrement effectuer avec success!");
         navigate("/signin");
-      onSignUpSuccessFul(newUser);
+      // onSignUpSuccessFul(newUser);
       }
 
       
@@ -101,7 +99,7 @@ const SignUp = ({ onSignUpSuccessFul }: SignProps) => {
                       FirstName:
                     </label>
                     <input
-                      {...register("firstName", { required: true })}
+                      {...register("firstname", { required: true })}
                       className="border border-gray-100 rounded outline-none px-2 py-3 w-full"
                       placeholder="FirstName"
                     />
@@ -111,7 +109,7 @@ const SignUp = ({ onSignUpSuccessFul }: SignProps) => {
                       LastName:
                     </label>
                     <input
-                      {...register("lastName", { required: true })}
+                      {...register("lastname", { required: true })}
                       className="border border-gray-100 rounded outline-none px-2 py-3 w-full"
                       placeholder="Entrer lastname"
                     />

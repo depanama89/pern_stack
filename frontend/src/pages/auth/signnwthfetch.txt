@@ -15,8 +15,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { BiLoader } from "react-icons/bi";
 
-
-const SignIn = () => {
+interface signInProps {
+  onLoginSuccessFull: (user: User) => void;
+}
+const SignIn = ({ onLoginSuccessFull }: signInProps) => {
   const [loading, setLoading] = useState(false);
   const { user, setCredentails } = useStore((state) => state);
 
@@ -24,7 +26,7 @@ const SignIn = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors},
+    formState: { errors, isSubmitted },
   } = useForm<LoginCredentiels>();
 
   useEffect(() => {
@@ -49,7 +51,7 @@ const SignIn = () => {
         localStorage.setItem("token", user.token);
         toast.success(user.message);
         setCredentails(user.user);
-        // onLoginSuccessFull(user.user);
+        onLoginSuccessFull(user.user);
         navigate("/");
         // setTimeout(() => {
 
@@ -148,3 +150,12 @@ const SignIn = () => {
 };
 
 export default SignIn;
+server: {
+    proxy: {
+      "/api-v1": {
+        target: "http://localhost:8000",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api-v1/, "/api-v1"),
+      },
+    },
+  },

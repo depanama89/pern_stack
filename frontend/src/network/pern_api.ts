@@ -1,4 +1,4 @@
-import type { Transaction } from "../model/transaction";
+
 import type { User } from "../model/user";
 
 type PayementMethod = "cach" | "carte";
@@ -14,6 +14,15 @@ export interface pernInput {
   currency: string;
 }
 
+export interface DashboardData  {
+  status: string;
+  availableBalance: number;
+  totalIncome: number;
+  totalExpense: number;
+  chartData: any[]; // Tu peux affiner ce type selon la structure exacte
+  lastTransactions: any[]; // À remplacer si tu as un modèle `TransactionModel`
+  lastAccount: any[]; // À remplacer si tu as un modèle `AccountModel`
+}
 export interface SignUpCredentials {
   email: string;
   firstname: string;
@@ -42,6 +51,8 @@ async function fetchData(input: RequestInfo, init?: RequestInit) {
     throw Error(errorMessage);
   }
 }
+
+// il retourne un tableau d'utilsateur
 
 export async function signUp(credentials: SignUpCredentials): Promise<User> {
   const response = await fetchData("/api-v1/auth/sign-up", {
@@ -73,7 +84,8 @@ export async function signIn(credentials: LoginCredentiels): Promise<LoginRespon
   return response.json();
 }
 
-export async function fetchStat():Promise<Transaction[]>{
+// dans ce il retourne un objet
+export async function fetchStat():Promise<DashboardData>{
   const token = localStorage.getItem('token');
 
   const response= await fetchData("/api-v1/transactions/dashboard",{
