@@ -39,16 +39,23 @@ const SignIn = ({ onLoginSuccessFull }: signInProps) => {
     setLoading(true);
 
     try {
-      const login = await pernApi.signIn(input) ;
-
-      if (login) {
-        toast.success("Login successful!");
-      }
-      setCredentails(login.user);
-      onLoginSuccessFull(login);
+      const user= await pernApi.signIn(input) ;
+ console.log(user);
+ 
+      // const {user:userInfo,token}=response
+      // if (user) {
+      //   toast.success("Login successful!");
+      // }
+      if(user.token){
+        localStorage.setItem("token",user.token)
+        toast.success(user.message)
+      setCredentails(user.user);
+      onLoginSuccessFull(user.user);
       setTimeout(() => {
         navigate("/");
       }, 5000);
+      }
+      
     } catch (error) {
       console.log(error);
       toast.error("Login failed. Please check your credentials.");

@@ -17,7 +17,7 @@ import Navbar from "./components/navbar/Navbar";
 const ProtectedRoot = () => {
   const { user } = useStore((state) => state);
 
-  console.log(user);
+
 
   return !user ? (
     <Navigate to="signin" replace={true} />
@@ -33,9 +33,11 @@ const ProtectedRoot = () => {
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState<User | null>();
-  // const theme = useStore((state) => state.theme);
+  const theme = useStore((state) => state.theme);
+  console.log(theme);
+  
   return (
-    <main className="">
+    <main className={theme}>
       <div className="w-full min-h-screen px-6 bg-gray-100 md:px-20 dark:bg-slate-900">
         <Routes>
           <Route

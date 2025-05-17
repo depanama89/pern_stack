@@ -14,7 +14,7 @@ const useStore = create<StoreState>((set) => ({
   user: userData ? JSON.parse(userData) : null,
 
   setTheme: (value) => {
-    localStorage.setItem("theme", value);
+    // localStorage.setItem("theme", value);
     set({ theme: value });
   },
   setCredentails: (user) => {

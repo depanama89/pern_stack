@@ -6,6 +6,7 @@ import { MdCurrencyExchange, MdOutlineKeyboardArrowDown } from "react-icons/md";
 import TransitionWrapper from "../../components/wrapper/transitionWrapper";
 import { RiMenu3Fill } from "react-icons/ri";
 import { Avatar } from "../../assets/index";
+import ThemeSwitch from "../ThemeSwitch";
 const links = [
   { label: "Dashboard", link: "/overview" },
   { label: "Transactions", link: "/transactions" },
@@ -14,7 +15,7 @@ const links = [
 ];
 const Navbar = () => {
   const { user, setCredentails } = useStore((state) => state);
-  console.log(user?.firstname);
+  console.log(user);
   
   const [selected, setSelected] = useState(0);
 
@@ -62,7 +63,8 @@ const Navbar = () => {
           </div>
         </div>
 
-        <div className="flex">
+        <div className="flex items-center gap-6">
+          <ThemeSwitch/>
           {/* <RiMenu3Fill className="cursor-pointer font-bold md:w-8 md:h-8 lg:w-10 lg:h-10 lg:hidden" /> */}
           <div className="flex items-center gap-2 ">
             <img
@@ -78,7 +80,7 @@ const Navbar = () => {
                 {user?.email}
               </span>
             </div>
-            <MdOutlineKeyboardArrowDown className="hidden md:block text-2xl text-gray-600 dark:text-gray-300 cursor-pointer" />
+            <MdOutlineKeyboardArrowDown onClick={handleSignOut} className="hidden md:block text-2xl text-gray-600 dark:text-gray-300 cursor-pointer" />
           </div>
         </div>
       </div>
