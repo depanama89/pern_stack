@@ -3,7 +3,7 @@ import Loading from "../components/loading";
 import * as pernApi from "../network/pern_api";
 import type { DashboardData } from "../network/pern_api";
 
-import { useNavigate } from "react-router-dom";
+import { data, useNavigate } from "react-router-dom";
 import useStore from "../store";
 import Info from "../components/info";
 import Stats from "../components/stats";
@@ -39,15 +39,12 @@ const Dashbaord = () => {
       try {
         const data = await pernApi.fetchStat();
 
-        // if (!Array.isArray(data)) {
-        //   // console.log(error);
-
-        //   throw new Error("L'API devrait retourner un tableau");
-        // }
+        
         setFetchData(data);
+        console.log(data);
+        
       } catch (error) {
-        // console.error(error);
-        // console.log(error);
+       
         toast.error("Erreur API",{
         description: error instanceof Error ? error.message : "Une erreur inconnue est survenue.",
         })
@@ -66,7 +63,7 @@ const Dashbaord = () => {
 
   if (isloading) {
     return (
-      <div className="flex items-center justify-center w-full h-[80vh]">
+      <div className="flex items-center justify-center min-w-full h-[80vh]">
         <Loading />
       </div>
     );
@@ -82,17 +79,16 @@ const Dashbaord = () => {
             expense: fetchData.totalExpense,
           }}
         />
-        // <Stats
-        //   dt={{
-        //     balance: fetchData.availableBalance,
-        //     income: fetchData.totalIncome,
-        //     expense: fetchData.totalExpense,
-        //   }}
-        // />
+     
       )}
       <div className="w-full flex flex-col gap-10 items-center md:flex md:flex-row  md:items-center lg:flex  ">
-        <Chart />
-        <DoughnutChart />
+       { fetchData?.chartData && <Chart data={fetchData?.chartData} />}
+      
+      { fetchData?.totalIncome > 0  && (  <DoughnutChart dt={{
+        balance:fetchData?.availableBalance,
+        income:fetchData.totalIncome,
+        expense:fetchData.totalExpense
+      }}  />)}
       </div>
       <div>
         <Transaction />

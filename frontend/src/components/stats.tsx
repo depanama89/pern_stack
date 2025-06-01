@@ -46,13 +46,13 @@ const Stats = ({ dt }: DtProps) => {
     },
     {
       label: "Total Income",
-      amount: dt.balance,
+      amount: dt.income,
       icon: <BsCashCoin size={26} />,
       increase: 8.9,
     },
     {
       label: "Total Expense",
-      amount: dt.balance,
+      amount: dt.expense,
       icon: <SiCashapp size={26} />,
       increase: -10.9,
     },

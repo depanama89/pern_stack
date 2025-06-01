@@ -9,15 +9,32 @@ import {
 } from "recharts";
 // import Title from "./title";
 
-const data = [
-  { name: "Income", value: 150020 },
-  { name: "Expense", value: 50010 },
-  { name: "Epargne", value: 4010 },
-];
+
+interface DataItem{
+  nname:string,
+  value:number
+}
+
+interface DataProps{
+  data:DataItem[]
+}
+interface DtProps {
+  dt: {
+    balance:  number | null;
+    income: number | undefined;
+    expense: number | undefined;
+  };
+}
 
 const COLORS = ["#002afe", "#ff2845", "#FF8042", "#00C49F"];
 
-const DoughnutChart = () => {
+const DoughnutChart = ({dt}:DtProps) => {
+const data = [
+  { name: "Income", value: dt.income },
+  { name: "Expense", value: dt.expense},
+
+];
+
   return (
     <div className="w-full md:w-1/3 flex flex-col items-center bg-gray-50 dark:bg-transparent mb-4">
       {/* <Title title='Summary' /> */}
